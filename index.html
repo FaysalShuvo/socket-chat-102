@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Socket-Chat-102</title>
+    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+    <title>Real-time Chat App</title>
+    <meta
+      name="viewport"
+      content="width=device-width,minimum-scale=1,initial-scale=1"
+    />
     <style>
       body {
         margin: 0;
@@ -72,7 +74,8 @@
       const form = document.querySelector("form");
       const input = document.querySelector(".input");
       const messages = document.querySelector(".messages");
-      const username = prompt("Please enter a username: ", "");
+      const username = prompt("Please enter a nickname: ", "");
+      const socket = io();
 
       form.addEventListener(
         "submit",
@@ -81,13 +84,30 @@
 
           addMessage(username + ": " + input.value);
 
+          socket.emit("chat_message", {
+            message: input.value,
+          });
+
           input.value = "";
           return false;
         },
         false
       );
 
+      socket.on("chat_message", function (data) {
+        addMessage(data.username + ": " + data.message);
+      });
+
+      socket.on("user_join", function (data) {
+        addMessage(data + " just joined the chat!");
+      });
+
+      socket.on("user_leave", function (data) {
+        addMessage(data + " has left the chat.");
+      });
+
       addMessage("You have joined the chat as '" + username + "'.");
+      socket.emit("user_join", username);
 
       function addMessage(message) {
         const li = document.createElement("li");
