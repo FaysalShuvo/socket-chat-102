@@ -2,7 +2,7 @@
 
 #### This is a sample Real Time Chatting Application
 
-<!-- ### [Live website](https://fancy-dashboard.netlify.app/) -->
+### [Live website](https://simple-chat-102.herokuapp.com/)
 
 ## Features
 
